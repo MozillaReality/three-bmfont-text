@@ -1,5 +1,4 @@
 var createLayout = require('layout-bmfont-text')
-var inherits = require('inherits')
 var createIndices = require('quad-indices')
 var buffer = require('three-buffer-vertex-data')
 var assign = require('object-assign')
@@ -7,28 +6,26 @@ var assign = require('object-assign')
 var vertices = require('./lib/vertices')
 var utils = require('./lib/utils')
 
-var Base = THREE.BufferGeometry
-
 module.exports = function createTextGeometry (opt) {
   return new TextGeometry(opt)
 }
 
-function TextGeometry (opt) {
-  Base.call(this)
+class TextGeometry extends THREE.BufferGeometry {
+  constructor (opt) {
+    super();
 
-  if (typeof opt === 'string') {
-    opt = { text: opt }
+    if (typeof opt === 'string') {
+      opt = { text: opt }
+    }
+
+    // use these as default values for any subsequent
+    // calls to update()
+    this._opt = assign({}, opt)
+
+    // also do an initial setup...
+    if (opt) this.update(opt)
   }
-
-  // use these as default values for any subsequent
-  // calls to update()
-  this._opt = assign({}, opt)
-
-  // also do an initial setup...
-  if (opt) this.update(opt)
 }
-
-inherits(TextGeometry, Base)
 
 TextGeometry.prototype.update = function (opt) {
   if (typeof opt === 'string') {
